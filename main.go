@@ -36,7 +36,16 @@ func main() {
 		if err != nil {
 			log.Println("error unmarshalling doggo response:", err)
 		}
-		http.Redirect(w, r, dogResp.Message, http.StatusTemporaryRedirect)
+		img, err := http.Get(dogResp.Message)
+		if err != nil {
+			log.Println("error getting doggo image:", err)
+		}
+
+		imgB, err := ioutil.ReadAll(img.Body)
+		if err != nil {
+			log.Println("error getting doggo image:", err)
+		}
+		w.Write(imgB)
 	})
 	log.Println("Hosting on :3333")
 	log.Fatalln(http.ListenAndServe(":3333", r))
